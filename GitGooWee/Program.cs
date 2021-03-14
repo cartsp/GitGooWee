@@ -6,7 +6,9 @@ namespace GitGooWee
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World1!");
+            var res = Terminal.Send(GitCommands.GetBranchs);
+            Console.WriteLine(Terminal.Send(GitCommands.GetBranchs));
+            Console.ReadKey();
         }
     }
 }
