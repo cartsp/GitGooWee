@@ -10,7 +10,8 @@ namespace GitGooWee
         static void Main(string[] args)
         {
 	        GitRemote = GitRepo.GetRemote().Trim();
-	        
+	        var res = GitRepo.GetBranches();
+	        var notPushed = GitRepo.GetUnPushedCommits(GitRemote, res.Single(a => a.Current).Name);
 			Application.Init();
 			var top = Application.Top;
 			
@@ -54,7 +55,6 @@ namespace GitGooWee
 				CanFocus = true
 			};
 			leftPane.Title = $"Branches";
-			var res = GitRepo.GetBranches();
 			
 			var branchList = new ListView();
 			branchList.SetSource(res);

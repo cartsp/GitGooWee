@@ -25,5 +25,9 @@ namespace GitGooWee
 
         public static string GetRemote() => 
             Terminal.Send(GitCommands.GetRemote);
+        
+        public static string GetUnPushedCommits(string origin, string branch) => 
+            Terminal.Send($"({GitCommands.GetUnPushedCommits} {origin}/{branch}");
+        
     }
 }
