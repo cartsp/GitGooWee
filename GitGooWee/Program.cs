@@ -27,8 +27,7 @@ namespace GitGooWee
 			new MenuBarItem ("_Git", new MenuItem [] {
 				new MenuItem ("_New", "Creates new file", null),
 				new MenuItem ("_Close", "", null),
-				new MenuItem ("_Quit", "", () => { top.Running = false; })
-
+				new MenuItem ("_Quit", "", () => Application.RequestStop())
 			}),
 			new MenuBarItem ("_Edit", new MenuItem [] {
 				new MenuItem ("_Copy", "", null),
@@ -38,36 +37,17 @@ namespace GitGooWee
 		});
 			top.Add(menu);
 
-			var login = new Label("Login: ") { X = 3, Y = 2 };
-			var password = new Label("Password: ")
+			var leftPane = new FrameView("Branches")
 			{
-				X = Pos.Left(login),
-				Y = Pos.Top(login) + 1
+				X = 0,
+				Y = 1, // for menu
+				Width = 25,
+				Height = Dim.Fill(1),
+				CanFocus = true
 			};
-			var loginText = new TextField("")
-			{
-				X = Pos.Right(password),
-				Y = Pos.Top(login),
-				Width = 40
-			};
-			var passText = new TextField("")
-			{
-				Secret = true,
-				X = Pos.Left(loginText),
-				Y = Pos.Top(password),
-				Width = Dim.Width(loginText)
-			};
+			leftPane.Title = $"Branches";
 
-			// Add some controls, 
-			win.Add(
-				// The ones with my favorite layout system, Computed
-				login, password, loginText, passText,
-
-				// The ones laid out like an australopithecus, with Absolute positions:
-				new CheckBox(3, 6, "Remember me"),
-                //new RadioGroup(3, 8, new[] { "_Personal", "_Company" }),
-				new Button(3, 14, "Ok"),
-				new Button(10, 14, "Cancel"),
+			win.Add(leftPane,
 				new Label(3, 18, "Press F9 or ESC plus 9 to activate the menubar")
 			);
 
