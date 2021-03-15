@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Linq;
 using Terminal.Gui;
 
 namespace GitGooWee
 {
     class Program
     {
+	    private static string GitRemote =  string.Empty;
         static void Main(string[] args)
         {
+	        GitRemote = GitRepo.GetRemote().Trim();
+	        
 			Application.Init();
 			var top = Application.Top;
-
+			
 			// Creates the top-level window to show
 			var win = new Window("GitUI")
 			{
@@ -27,7 +31,11 @@ namespace GitGooWee
 			new MenuBarItem ("_Git", new MenuItem [] {
 				new MenuItem ("_New", "Creates new file", null),
 				new MenuItem ("_Close", "", null),
-				new MenuItem ("_Quit", "", () => Application.RequestStop())
+				new MenuItem ("_Quit", "", () =>
+				{
+					Application.Driver.End();
+					Application.RequestStop();
+				})
 			}),
 			new MenuBarItem ("_Edit", new MenuItem [] {
 				new MenuItem ("_Copy", "", null),
@@ -42,17 +50,30 @@ namespace GitGooWee
 				X = 0,
 				Y = 1, // for menu
 				Width = 25,
-				Height = Dim.Fill(1),
+				Height = 20,
 				CanFocus = true
 			};
 			leftPane.Title = $"Branches";
-
-			win.Add(leftPane,
-				new Label(3, 18, "Press F9 or ESC plus 9 to activate the menubar")
-			);
-
-			var branches = GitRepo.GetBranches();
-
+			var res = GitRepo.GetBranches();
+			
+			var branchList = new ListView();
+			branchList.SetSource(res);
+			branchList.Width = 23;
+			branchList.Height = res.Count;
+			leftPane.Add(branchList);
+			
+			var rightPane = new FrameView("Local Commits")
+			{
+				X = 26,
+				Y = 1, // for menu
+				Width = 45,
+				Height = 20,
+				CanFocus = true
+			};
+			leftPane.Title = $"Local Commits";
+			
+			win.Add(leftPane, rightPane);
+			
 			Application.Run();
         }
     }
