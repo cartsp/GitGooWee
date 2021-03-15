@@ -51,8 +51,7 @@ namespace GitGooWee
 				new Label(3, 18, "Press F9 or ESC plus 9 to activate the menubar")
 			);
 
-
-			var res = Terminal.Send(GitCommands.GetBranchs);
+			var branches = GitRepo.GetBranches();
 
 			Application.Run();
         }
