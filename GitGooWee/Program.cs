@@ -70,7 +70,13 @@ namespace GitGooWee
 				Height = 20,
 				CanFocus = true
 			};
-			leftPane.Title = $"Local Commits";
+			rightPane.Title = $"Local Commits";
+			
+			var commitList = new ListView();
+			commitList.SetSource(notPushed);
+			commitList.Width = 50;
+			commitList.Height = res.Count;
+			rightPane.Add(commitList);
 			
 			win.Add(leftPane, rightPane);
 			

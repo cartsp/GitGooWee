@@ -26,8 +26,20 @@ namespace GitGooWee
         public static string GetRemote() => 
             Terminal.Send(GitCommands.GetRemote);
         
-        public static string GetUnPushedCommits(string origin, string branch) => 
-            Terminal.Send($"({GitCommands.GetUnPushedCommits} {origin}/{branch}");
-        
+        public static List<Commit> GetUnPushedCommits(string origin, string branch)
+        {
+            var commits = Terminal.Send($"{GitCommands.GetUnPushedCommits} {origin}/{branch}");
+
+            return commits
+                .Split('\n')
+                .SkipLast(1)
+                .Select(ParseCommitString).ToList();
+        }
+
+        private static Commit ParseCommitString(string commitString)
+        {
+            var parsed = commitString[2..].Split(' ', 2);
+            return new Commit(){Hash = parsed[0], Message = parsed[1]};
+        }
     }
 }

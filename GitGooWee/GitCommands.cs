@@ -5,6 +5,6 @@ namespace GitGooWee
     {
         public const string GetBranchs = "git branch";
         public const string GetRemote = "git remote";
-        public const string GetUnPushedCommits = "git cherry -v GitGooWee/main";
+        public const string GetUnPushedCommits = "git cherry -v ";
     }
 }
