@@ -75,7 +75,7 @@ namespace GitGooWee
 			var commitList = new ListView();
 			commitList.SetSource(notPushed);
 			commitList.Width = 50;
-			commitList.Height = res.Count;
+			commitList.Height = notPushed.Count;
 			rightPane.Add(commitList);
 			
 			win.Add(leftPane, rightPane);
