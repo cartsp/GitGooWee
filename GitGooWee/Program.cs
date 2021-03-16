@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
 
@@ -9,6 +10,21 @@ namespace GitGooWee
 	    private static string GitRemote =  string.Empty;
         static void Main(string[] args)
         {
+	        var item = new StatusItem(Key.ControlS, "~CTRL-S~ Squash - New comment", () =>
+	        {
+				Console.WriteLine("Test");
+	        });
+	        var statusBar = new StatusBar () {
+		        Visible = true,
+	        };
+	        var quitStatusItem = new StatusItem(Key.ControlQ, "~CTRL-Q~ Quit", () =>
+	        {
+
+		        Application.RequestStop();
+
+	        });
+	        statusBar.Items = new StatusItem[] {quitStatusItem, item};
+	        
 	        GitRemote = GitRepo.GetRemote().Trim();
 	        var res = GitRepo.GetBranches();
 	        var notPushed = GitRepo.GetUnPushedCommits(GitRemote, res.Single(a => a.Current).Name);
@@ -45,7 +61,7 @@ namespace GitGooWee
 			})
 		});
 			top.Add(menu);
-
+			top.Add(statusBar);
 			var leftPane = new FrameView("Branches")
 			{
 				X = 0,
