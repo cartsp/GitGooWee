@@ -10,25 +10,47 @@ namespace GitGooWee
 	    private static string GitRemote =  string.Empty;
         static void Main(string[] args)
         {
-	        var item = new StatusItem(Key.ControlS, "~CTRL-S~ Squash - New comment", () =>
+	        var statusBar = new StatusBar () {Visible = true};
+
+	        statusBar.Items = new StatusItem[]
 	        {
-				Console.WriteLine("Test");
-	        });
-	        var statusBar = new StatusBar () {
-		        Visible = true,
+		        new (Key.ControlQ, "~CTRL-Q~ Quit", () =>
+		        { Application.RequestStop(); }),
+		        new (Key.ControlS, "~CTRL-S~ Squash", () =>
+		        { //MessageBox.Query ("Squashed commit", "Enter the commit message:","_Ok");
+            //
+            //
+            bool okpressed = false;
+            var ok = new Button(3, 14, "Ok");
+            ok.Clicked += () =>
+            {
+            	Application.RequestStop();
+            	okpressed = true;
+            };
+            
+            var cancel = new Button(10, 14, "Cancel");
+            cancel.Clicked += () => Application.RequestStop();
+                 
+            var dialog = new Dialog ("Login", 60, 18, ok, cancel);
+            
+            var entry = new TextField () {
+            	X = 1, 
+            	Y = 1,
+            	Width = Dim.Fill (),
+            	Height = 1
+            };
+            dialog.Add (entry);
+            Application.Run (dialog);
+            if (okpressed)
+            	Console.WriteLine ("The user entered: " + entry.Text);
+				})
 	        };
-	        var quitStatusItem = new StatusItem(Key.ControlQ, "~CTRL-Q~ Quit", () =>
-	        {
-
-		        Application.RequestStop();
-
-	        });
-	        statusBar.Items = new StatusItem[] {quitStatusItem, item};
 	        
 	        GitRemote = GitRepo.GetRemote().Trim();
 	        var res = GitRepo.GetBranches();
 	        var notPushed = GitRepo.GetUnPushedCommits(GitRemote, res.Single(a => a.Current).Name);
-			Application.Init();
+			
+	        Application.Init();
 			var top = Application.Top;
 			
 			// Creates the top-level window to show
@@ -82,8 +104,8 @@ namespace GitGooWee
 			{
 				X = 26,
 				Y = 1, // for menu
-				Width = 45,
-				Height = 20,
+				Width = Dim.Fill(),
+				Height = Dim.Fill(),
 				CanFocus = true
 			};
 			rightPane.Title = $"Local Commits";
@@ -95,8 +117,32 @@ namespace GitGooWee
 			rightPane.Add(commitList);
 			
 			win.Add(leftPane, rightPane);
-			
+
 			Application.Run();
+			//
+			// bool okpressed = false;
+			// var ok = new Button(3, 14, "Ok");
+			// ok.Clicked += () =>
+			// {
+			// 	Application.RequestStop();
+			// 	okpressed = true;
+			// };
+			//
+			// var cancel = new Button(10, 14, "Cancel");
+			// cancel.Clicked += () => Application.RequestStop();
+   //      
+			// var dialog = new Dialog ("Login", 60, 18, ok, cancel);
+			//
+			// var entry = new TextField () {
+			// 	X = 1, 
+			// 	Y = 1,
+			// 	Width = Dim.Fill (),
+			// 	Height = 1
+			// };
+			// dialog.Add (entry);
+			// Application.Run (dialog);
+			// if (okpressed)
+			// 	Console.WriteLine ("The user entered: " + entry.Text);
         }
     }
 }
