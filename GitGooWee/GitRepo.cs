@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Terminal.Gui;
 
 namespace GitGooWee
 {
@@ -14,32 +12,6 @@ namespace GitGooWee
             return ParseGitBranchOutput(gitBranchOutput).ToList();
         }
 
-        private static IEnumerable<Branch> ParseGitBranchOutput(string branchString)
-        {
-            var branches = branchString.Split('\n');
-
-            IEnumerable<Branch> res;
-
-            if (branches.Count() != 2)
-            {
-                res = branches
-                .Skip(1)
-                .SkipLast(1)
-                .Select(branch => branch.StartsWith("*")
-                ? new Branch() { Name = branch[2..], Current = true }
-                : new Branch() { Name = branch.Trim() }).AsEnumerable();
-            }
-            else
-            {
-                res = new List<Branch>() { new Branch() { Current = true, Name = branches[0][2..] } };
-            }
-
-            return res;
-        }
-
-        public static string GetRemote() => 
-            Terminal.Send(GitCommands.GetRemote);
-        
         public static List<Commit> GetUnPushedCommits(string origin, string branch)
         {
             var commits = Terminal.Send($"{GitCommands.GetUnPushedCommits} {origin}/{branch}");
@@ -53,7 +25,38 @@ namespace GitGooWee
         private static Commit ParseCommitString(string commitString)
         {
             var parsed = commitString[2..].Split(' ', 2);
-            return new Commit(){Hash = parsed[0], Message = parsed[1]};
+            return new Commit() { Hash = parsed[0], Message = parsed[1] };
         }
+
+        private static IEnumerable<Branch> ParseGitBranchOutput(string branchString)
+        {
+            var branches = branchString.Split('\n');
+
+            if (MoreThanSingleLocalBranch(branches))
+            {
+                return ParseMultipleLocalBranches(branches);
+            }
+
+            return ReturnSingleLocalBranch(branches);
+        }
+
+        private static bool MoreThanSingleLocalBranch(string[] branches) 
+            => branches.Length != 2;
+
+        private static IEnumerable<Branch> ParseMultipleLocalBranches(string[] branches) 
+            => branches
+                .Skip(1)
+                .SkipLast(1)
+                .Select(branch => branch.StartsWith("*")
+                ? new Branch() { Name = branch[2..], Current = true }
+                : new Branch() { Name = branch.Trim() }).AsEnumerable();
+
+        private static List<Branch> ReturnSingleLocalBranch(string[] branches) 
+            => new List<Branch>() { new Branch() { Current = true, Name = branches[0][2..] } };
+
+        public static string GetRemote() => 
+            Terminal.Send(GitCommands.GetRemote);
+        
+
     }
 }

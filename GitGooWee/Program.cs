@@ -17,32 +17,30 @@ namespace GitGooWee
 		        new (Key.ControlQ, "~CTRL-Q~ Quit", () =>
 		        { Application.RequestStop(); }),
 		        new (Key.ControlS, "~CTRL-S~ Squash", () =>
-		        { //MessageBox.Query ("Squashed commit", "Enter the commit message:","_Ok");
-            //
-            //
-            bool okpressed = false;
-            var ok = new Button(3, 14, "Ok");
-            ok.Clicked += () =>
-            {
-            	Application.RequestStop();
-            	okpressed = true;
-            };
+		        { 
+					bool okpressed = false;
+					var ok = new Button(3, 14, "Ok");
+					ok.Clicked += () =>
+					{
+            			Application.RequestStop();
+            			okpressed = true;
+					};
             
-            var cancel = new Button(10, 14, "Cancel");
-            cancel.Clicked += () => Application.RequestStop();
+					var cancel = new Button(10, 14, "Cancel");
+					cancel.Clicked += () => Application.RequestStop();
                  
-            var dialog = new Dialog ("Login", 60, 18, ok, cancel);
+					var dialog = new Dialog ("Login", 60, 18, ok, cancel);
             
-            var entry = new TextField () {
-            	X = 1, 
-            	Y = 1,
-            	Width = Dim.Fill (),
-            	Height = 1
-            };
-            dialog.Add (entry);
-            Application.Run (dialog);
-            if (okpressed)
-            	Console.WriteLine ("The user entered: " + entry.Text);
+					var entry = new TextField () {
+            			X = 1, 
+            			Y = 1,
+            			Width = Dim.Fill (),
+            			Height = 1
+					};
+					dialog.Add (entry);
+					Application.Run (dialog);
+					if (okpressed)
+            			Console.WriteLine ("The user entered: " + entry.Text);
 				})
 	        };
 	        
@@ -53,7 +51,6 @@ namespace GitGooWee
 	        Application.Init();
 			var top = Application.Top;
 			
-			// Creates the top-level window to show
 			var win = new Window("GitUI")
 			{
 				X = 0,
@@ -64,26 +61,18 @@ namespace GitGooWee
 			};
 
 			top.Add(win);
-
-			// Creates a menubar, the item "New" has a help menu.
+			
 			var menu = new MenuBar(new MenuBarItem[] {
-			new MenuBarItem ("_Git", new MenuItem [] {
-				new MenuItem ("_New", "Creates new file", null),
-				new MenuItem ("_Close", "", null),
-				new MenuItem ("_Quit", "", () =>
-				{
-					Application.Driver.End();
-					Application.RequestStop();
-				})
-			}),
-			new MenuBarItem ("_Edit", new MenuItem [] {
-				new MenuItem ("_Copy", "", null),
-				new MenuItem ("C_ut", "", null),
-				new MenuItem ("_Paste", "", null)
-			})
-		});
+							new MenuBarItem ("_Git", new MenuItem [] {
+								new MenuItem ("_New", "Creates new file", null),
+								new MenuItem ("_Close", "", null),
+								new MenuItem ("_Quit", "", () => {Application.Driver.End();Application.RequestStop();})
+							})
+						});
+
 			top.Add(menu);
 			top.Add(statusBar);
+
 			var leftPane = new FrameView("Branches")
 			{
 				X = 0,
@@ -119,30 +108,6 @@ namespace GitGooWee
 			win.Add(leftPane, rightPane);
 
 			Application.Run();
-			//
-			// bool okpressed = false;
-			// var ok = new Button(3, 14, "Ok");
-			// ok.Clicked += () =>
-			// {
-			// 	Application.RequestStop();
-			// 	okpressed = true;
-			// };
-			//
-			// var cancel = new Button(10, 14, "Cancel");
-			// cancel.Clicked += () => Application.RequestStop();
-   //      
-			// var dialog = new Dialog ("Login", 60, 18, ok, cancel);
-			//
-			// var entry = new TextField () {
-			// 	X = 1, 
-			// 	Y = 1,
-			// 	Width = Dim.Fill (),
-			// 	Height = 1
-			// };
-			// dialog.Add (entry);
-			// Application.Run (dialog);
-			// if (okpressed)
-			// 	Console.WriteLine ("The user entered: " + entry.Text);
         }
     }
 }
