@@ -14,14 +14,28 @@ namespace GitGooWee
             return ParseGitBranchOutput(gitBranchOutput).ToList();
         }
 
-        private static IEnumerable<Branch> ParseGitBranchOutput(string branchString) =>
-            branchString
-                .Split('\n')
+        private static IEnumerable<Branch> ParseGitBranchOutput(string branchString)
+        {
+            var branches = branchString.Split('\n');
+
+            IEnumerable<Branch> res;
+
+            if (branches.Count() != 2)
+            {
+                res = branches
                 .Skip(1)
                 .SkipLast(1)
                 .Select(branch => branch.StartsWith("*")
-                    ? new Branch() { Name = branch[2..], Current = true }
-                    : new Branch() { Name = branch.Trim() });
+                ? new Branch() { Name = branch[2..], Current = true }
+                : new Branch() { Name = branch.Trim() }).AsEnumerable();
+            }
+            else
+            {
+                res = new List<Branch>() { new Branch() { Current = true, Name = branches[0][2..] } };
+            }
+
+            return res;
+        }
 
         public static string GetRemote() => 
             Terminal.Send(GitCommands.GetRemote);
