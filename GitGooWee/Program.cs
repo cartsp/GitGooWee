@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
 
@@ -11,12 +10,12 @@ namespace GitGooWee
         static void Main(string[] args)
         {
 	        var statusBar = new StatusBar () {Visible = true};
-
+			
 	        statusBar.Items = new StatusItem[]
 	        {
-		        new (Key.ControlQ, "~CTRL-Q~ Quit", () =>
+		        new (Key.Q | Key.CtrlMask, "~CTRL-Q~ Quit", () =>
 		        { Application.RequestStop(); }),
-		        new (Key.ControlS, "~CTRL-S~ Squash", () =>
+		        new (Key.S | Key.CtrlMask, "~CTRL-S~ Squash", () =>
 		        { 
 					bool okpressed = false;
 					var ok = new Button(3, 14, "Ok");
@@ -43,7 +42,7 @@ namespace GitGooWee
             			Console.WriteLine ("The user entered: " + entry.Text);
 				})
 	        };
-	        
+
 	        GitRemote = GitRepo.GetRemote().Trim();
 	        var res = GitRepo.GetBranches();
 	        var notPushed = GitRepo.GetUnPushedCommits(GitRemote, res.Single(a => a.Current).Name);
@@ -78,7 +77,7 @@ namespace GitGooWee
 				X = 0,
 				Y = 1, // for menu
 				Width = 25,
-				Height = 20,
+				Height = Dim.Fill(),
 				CanFocus = true
 			};
 			leftPane.Title = $"Branches";
