@@ -49,6 +49,13 @@ namespace GitGooWee
             var res = GitRepo.GetBranches();
             var notPushed = GitRepo.GetUnPushedCommits(GitRemote, res.Single(a => a.Current).Name);
 
+            var menu = new MenuBar(new MenuBarItem[] {
+                            new MenuBarItem ("_Git", new MenuItem [] {
+                                new MenuItem ("_New", "Creates new file", null),
+                                new MenuItem ("_Close", "", null),
+                                new MenuItem ("_Quit", "", () => {Application.Driver.End();Application.RequestStop();})
+                            })
+                        });
 
             var top = Application.Top;
 
@@ -60,19 +67,6 @@ namespace GitGooWee
                 Width = Dim.Fill(),
                 Height = Dim.Fill()
             };
-
-            top.Add(win);
-
-            var menu = new MenuBar(new MenuBarItem[] {
-                            new MenuBarItem ("_Git", new MenuItem [] {
-                                new MenuItem ("_New", "Creates new file", null),
-                                new MenuItem ("_Close", "", null),
-                                new MenuItem ("_Quit", "", () => {Application.Driver.End();Application.RequestStop();})
-                            })
-                        });
-
-            top.Add(menu);
-            top.Add(statusBar);
 
             var leftPane = new FrameView("Branches")
             {
@@ -98,6 +92,7 @@ namespace GitGooWee
                 Height = Dim.Fill(),
                 CanFocus = true
             };
+
             rightPane.Title = $"Local Commits";
 
             var commitList = new ListView();
@@ -107,6 +102,7 @@ namespace GitGooWee
             rightPane.Add(commitList);
 
             win.Add(leftPane, rightPane);
+            top.Add(win, menu, statusBar);
 
             Application.Run();
         }
